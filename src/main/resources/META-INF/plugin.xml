@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>edu.unc.learnwithai</id>
+    <name>LearnWithAI</name>
+    <vendor>ThreadMind Course Staff</vendor>
+    <description><![CDATA[
+        Opens <b>learnwithai.unc.edu</b> in a sidebar inside IntelliJ, so you can use
+        the course site next to your code. Click <b>LearnWithAI</b> on the right edge
+        of the window and sign in with your UNC account.
+    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="LearnWithAI"
+                    anchor="right"
+                    icon="/icons/learnwithai.svg"
+                    factoryClass="edu.unc.learnwithai.LearnWithAIToolWindowFactory"/>
+    </extensions>
+</idea-plugin>

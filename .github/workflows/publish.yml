@@ -1,0 +1,64 @@
+# Builds the plugin on every push to main and publishes it:
+#   - GitHub Pages: the landing page + plugin repository students install from
+#   - GitHub Release v<version>: a downloadable zip, created once per version
+# To ship an update, bump `version` in build.gradle.kts and push.
+name: Publish plugin
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Build plugin
+        run: ./gradlew buildPlugin
+
+      - id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Assemble site
+        run: scripts/build-site.sh "${{ steps.pages.outputs.base_url }}" "${{ github.server_url }}/${{ github.repository }}"
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: build/site
+
+      - id: deploy
+        uses: actions/deploy-pages@v5
+
+      - name: Create release for this version (if new)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' build.gradle.kts)
+          if gh release view "v$version" >/dev/null 2>&1; then
+            echo "Release v$version already exists; skipping."
+          else
+            gh release create "v$version" "build/distributions/learnwithai-plugin-$version.zip" \
+              --title "LearnWithAI $version" \
+              --notes "Students: install from ${{ steps.deploy.outputs.page_url }} so you get updates automatically."
+          fi
