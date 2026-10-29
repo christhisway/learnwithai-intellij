@@ -8,6 +8,10 @@
         of the window and sign in with your UNC account.
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
+    <!-- IntelliJ 2026.2+ ships the embedded browser (JCEF) as a separate bundled
+         plugin; its classes are only visible to plugins that depend on it. Older
+         IDEs have no such plugin and keep JCEF in the core, so this is optional. -->
+    <depends optional="true" config-file="learnwithai-jcef.xml">com.intellij.modules.jcef</depends>
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="LearnWithAI"
                     anchor="right"
