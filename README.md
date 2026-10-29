@@ -35,10 +35,6 @@ Requires IntelliJ IDEA 2024.2 or newer (Community or Ultimate).
   IntelliJ 2024.2.5, 2026.1.5 and 2026.2.3 (first run downloads ~3.9 GB of IDEs).
   It can't see class-visibility problems like the one below, so a new IDE
   release still deserves a quick `runIde` check.
-- **Change the site it opens:** `HOME_URL` in
-  `src/main/kotlin/edu/unc/learnwithai/LearnWithAIToolWindowFactory.kt`.
-- **Change the student landing page:** `site/index.html` (placeholders like
-  `__VERSION__` are filled in by `scripts/build-site.sh`).
 
 ### How it works
 
